@@ -1,0 +1,13 @@
+{
+  "name": "@code-doctor/eslint-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.js" },
+  "dependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0"
+  }
+}

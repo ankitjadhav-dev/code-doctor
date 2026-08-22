@@ -1,0 +1,1 @@
+export default function DashboardLoading() { return <div className="space-y-5"><div className="h-8 w-72 animate-pulse rounded bg-slate-200 dark:bg-slate-800" /><div className="grid gap-5 lg:grid-cols-2"><div className="h-64 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" /><div className="h-64 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" /></div></div>; }

@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+
+# These packages provide Prisma engines and Next.js build tooling. Their install scripts are
+# explicitly approved; no analyzed repository dependencies are ever installed by Code Doctor.
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  sharp: true

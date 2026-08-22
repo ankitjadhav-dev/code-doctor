@@ -1,0 +1,3 @@
+import React from 'react';
+import { cn } from '@/lib/utils';
+export function ScoreRing({ score, size = 'large' }: { score: number; size?: 'large' | 'small' }) { const dimension = size === 'large' ? 'size-36 text-4xl' : 'size-14 text-lg'; const color = score >= 85 ? 'from-cyan-400 to-emerald-400' : score >= 70 ? 'from-amber-300 to-cyan-400' : 'from-orange-400 to-red-500'; return <div className={cn('grid place-items-center rounded-full bg-gradient-to-br p-1', dimension, color)}><div className="grid size-full place-items-center rounded-full bg-white dark:bg-slate-950"><span className="font-semibold tracking-tight">{score}</span></div></div>; }

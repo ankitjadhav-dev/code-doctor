@@ -1,0 +1,3 @@
+import { notFound } from 'next/navigation';
+import { ReportPreview } from '@/components/reports/report-preview';
+export default async function AnalysisReportPage({ params }: { params: Promise<{ analysisId: string }> }) { const { analysisId } = await params; if (analysisId !== 'demo-report') notFound(); return <div><div className="mb-7"><p className="text-sm font-medium text-cyan-600 dark:text-cyan-400">Illustrative report · main</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">northstar-web</h1><p className="mt-2 text-sm text-slate-600 dark:text-slate-400">A static preview of the report experience. No repository has been connected or analyzed.</p></div><ReportPreview /></div>; }

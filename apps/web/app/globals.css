@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme { --font-sans: var(--font-inter); }
+
+* { border-color: rgb(226 232 240); }
+body { background: #f8fafc; color: #0f172a; }
+.dark body { background: #020617; color: #e2e8f0; }
+.grid-pattern { background-image: linear-gradient(to right, rgb(148 163 184 / 0.11) 1px, transparent 1px), linear-gradient(to bottom, rgb(148 163 184 / 0.11) 1px, transparent 1px); background-size: 32px 32px; }
