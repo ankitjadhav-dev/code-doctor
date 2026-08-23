@@ -1,14 +1,32 @@
 name: CI
+
 on: [push, pull_request]
+
 jobs:
   quality:
     runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/code_doctor?schema=public
+      AUTH_SECRET: development-secret-must-have-at-least-thirty-two-characters
+      AUTH_URL: http://localhost:3000
+      AUTH_GITHUB_ID: ci-github-id
+      AUTH_GITHUB_SECRET: ci-github-secret
+      GITHUB_APP_SLUG: code-doctor
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
-        with: { version: 11.19.0 }
+        with:
+          version: 11.19.0
+
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: pnpm }
+        with:
+          node-version: 22
+          cache: pnpm
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm db:generate
       - run: pnpm typecheck
