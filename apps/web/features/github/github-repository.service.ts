@@ -12,6 +12,10 @@ export async function listAuthorizedRepositories(organizationId: string, install
 export async function listBranches(organizationId: string, installationId: string, repositoryId: string) {
   const repository = await db.repository.findFirst({ where: { id: repositoryId, organizationId, githubInstallationId: installationId } });
   if (!repository || !repository.ownerLogin) throw new Error('REPOSITORY_NOT_FOUND');
+  // The persisted repository is a cache only. Recheck the installation's current
+  // authorization before exposing refs, in case access changed after a prior sync.
+  const authorized = await listAuthorizedRepositories(organizationId, installationId);
+  if (!authorized.some((item) => item.id === repository.externalId && !item.archived)) throw new Error('REPOSITORY_NOT_AUTHORIZED');
   const installation = await db.gitHubInstallation.findFirst({ where: { id: installationId, organizationId, suspendedAt: null } });
   if (!installation) throw new Error('INSTALLATION_NOT_FOUND');
   const client = await installationClient(installation.installationId);
