@@ -2,10 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@code-doctor/database';
 import { githubApp } from '@/features/github/github-app.server';
 import { requireWorkspace } from '@/server/authorization';
+import { env } from '@/lib/env';
+import { verifyGitHubInstallationState } from '@/features/github/github-installation-state.server';
 
 export async function GET(request: NextRequest) {
     try {
-        const { organization } = await requireWorkspace();
+        const { user, organization } = await requireWorkspace();
+
+        if (!verifyGitHubInstallationState(request.nextUrl.searchParams.get('state'), { userId: user.id, organizationId: organization.id }, env.AUTH_SECRET)) {
+            return NextResponse.json({ code: 'INVALID_INSTALLATION_STATE', message: 'Invalid installation request.' }, { status: 400 });
+        }
 
         const raw = request.nextUrl.searchParams.get('installation_id');
 
