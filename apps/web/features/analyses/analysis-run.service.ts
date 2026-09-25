@@ -13,3 +13,15 @@ export async function createQueuedAnalysis(input: { organizationId: string; user
   if (!/^[a-f0-9]{40}$/i.test(commitSha)) throw new Error('INVALID_COMMIT_SHA');
   return db.analysisRun.create({ data: { organizationId: input.organizationId, repositoryId: repository.id, githubInstallationId: installation.id, requestedByUserId: input.userId, branch: ref.name, commitSha, status: 'QUEUED', statusDetail: 'Queued for deterministic analysis.', queuedAt: new Date(), events: { create: [{ type: 'CREATED', message: 'Analysis request created.' }, { type: 'REPOSITORY_VALIDATED', message: 'Repository authorization verified.' }, { type: 'REF_RESOLVED', message: 'Branch resolved to an immutable commit SHA.' }, { type: 'QUEUED', message: 'Queued for deterministic analysis.' }] } }, include: { events: true } });
 }
+
+export async function cancelQueuedAnalysis(analysisId: string, organizationId: string) {
+  return db.$transaction(async (tx) => {
+    const transition = await tx.analysisRun.updateMany({
+      where: { id: analysisId, organizationId, status: 'QUEUED' },
+      data: { status: 'CANCELLED', statusDetail: 'Cancelled before deterministic analysis began.' },
+    });
+    if (transition.count !== 1) throw new Error('ANALYSIS_NOT_CANCELLABLE');
+    await tx.analysisEvent.create({ data: { analysisRunId: analysisId, type: 'CANCELLED', message: 'Analysis request cancelled.' } });
+    return tx.analysisRun.findFirst({ where: { id: analysisId, organizationId }, include: { repository: { select: { fullName: true } }, events: { orderBy: { createdAt: 'asc' } } } });
+  });
+}

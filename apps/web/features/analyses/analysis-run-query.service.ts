@@ -10,3 +10,11 @@ export function findAnalysisRunForOrganization(analysisId: string, organizationI
     },
   });
 }
+
+export function listAnalysisRunsForOrganization(organizationId: string) {
+  return db.analysisRun.findMany({
+    where: { organizationId },
+    include: { repository: { select: { fullName: true } } },
+    orderBy: { createdAt: 'desc' },
+  });
+}
